@@ -1,1 +1,5 @@
 # java-codes
+// How to print in java
+
+System.out.print("Hello");
+System.out.println("Hello World");
