@@ -3,3 +3,11 @@
 
 System.out.print("Hello");
 System.out.println("Hello World");
+
+// variables 
+int x = 10;
+int y = 20;
+int sum = x+y;
+System.out.println(sum);
+int prd = x*y;
+System.out.println(prd);
