@@ -11,3 +11,14 @@ int sum = x+y;
 System.out.println(sum);
 int prd = x*y;
 System.out.println(prd);
+
+// if else 
+int n = 12;
+if(n%2==0)
+{
+System.out.println("Even");
+}
+else 
+{
+System.out.println("odd");
+}
