@@ -1,195 +1,647 @@
 import java.util.*;
 public class AJ
 {
-    public static class Node
-    {
-        int data;
-        Node next;
-    }
-    public static class LinkedList
-    {
-        Node head;
-        Node tail;
-        int size;
+  public static class Node
+  {
+    int data;
+    Node next;
+  }
+  public static class LinkedList
+  {
+    Node head;
+    Node tail;
+    int size;
 
-        public void addLast(int val)
-        {
-            Node temp = new Node();
-            temp.data = val;
-            temp.next = null;
-            if(size==0)
-            {
-               head = tail = temp;
-            }
-            else 
-            {
-                tail.next = temp;
-                tail = temp;
-            }
-            size++;
-        }
-        public int size()
-        {
-            return size;
-        }
-        public void display()
-        {
-            Node temp = head;
-            while(temp!=null)
-            {
-                System.out.print(temp.data+" ");
-                temp = temp.next;
-            }
-            System.out.println();
-        }
-        public void removeFirst()
-        {
-            if(size==0)
-            {
-                System.out.println("List is Empty");
-            }
-            else if(size==1)
-            {
-                head = tail = null;
-                size = 0;
-            }
-            else 
-            {
-                head = head.next;
-                size--;
-            }
-        }
-        public int getFirst()
-        {
-            if(size==0)
-            {
-                System.out.println("List is Empty");
-                return-1;
-            }
-            else 
-            {
-                return head.data;
-            }
-        }
-        public int getLast()
-        {
-            if(size==0)
-            {
-                System.out.println("List is Empty");
-                return-1; 
-            }
-            else 
-            {
-                return tail.data;
-            }
-        }
-        public int getAt(int idx)
-        {
-            if(size==0)
-            {
-                System.out.println("List is Empty");
-                return-1; 
-            }
-            else if(idx<0||idx>=size)
-            {
-                System.out.println("Invalid Argument");
-                return -1;
-            }
-            else 
-            {
-                Node temp = head;
-                for(int i=0;i<idx;i++)
-                {
-                    temp = temp.next;
-                }
-                return temp.data;
-            }
-        }
-        public void addFirst(int val)
-        {
-            Node temp = new Node();
-            temp.data = val;
-            if(size==0)
-            {
-                temp.next = null;
-                head = tail = temp;
-            }
-            else 
-            {
-                temp.next = head;
-                head = temp;
-            }
-            size++;
-        }
-        public int addAt(int idx,int val)
-        {
-            if(idx==0)
-            {
-              addFirst(val);
-            }
-            else if(idx==size)
-            {
-               addLast(val);
-            }
-            else if(idx<0||idx>size)
-            {
-               System.out.println("Invalid Argument");
-            }
-            else 
-            {
-                Node node = new Node();
-                node.data = val;
-    
-                Node temp = head;
-                for(int i=0;i<idx-1;i++)
-                {
-                    temp = temp.next;
-                }
-                node.next = temp.next;
-                temp.next = node;
-            }
-        }
-        public void removeLast()
-        {
-            if(size==0)
-            {
-                System.out.println("List is Empty");
-            }
-            else if(size==1)
-            {
-                head = tail = null;
-                size=0;
-            }
-            else
-            {
-                Node temp = head;
-                for(int i=0;i<size-2;i++)
-                {
-                    temp = temp.next;
-                }
-                tail = temp;
-                tail.next = null;
-                size--;
-            }
-        }
-    }
-    public static void main(String[] args)
+    public static int findIntersection(LinkedList one,LinkedList two)
     {
-      Scanner scn = new Scanner(System.in);
-      LinkedList list = new LinkedList();
-      int idx = scn.nextInt();
-      list.addLast(10);
-      list.addLast(20);
-      list.addLast(30);
-      list.addLast(40);
-      System.out.println(list.getFirst());
-      System.out.println(list.getLast());
-      System.out.println(list.getAt(idx));
-      
-      //list.removeFirst();
-      list.addFirst(200);
-      list.display();
-      System.out.println(list.size());
-
+      Node t1 = one.head;
+      Node t2 = two.head;
+      int delta = Math.abs(one.size-two.size);
+      if(one.size>two.size)
+      {
+        for(int i=0;i<delta;i++)
+        {
+          t1 = t1.next;
+        }
+      }
+      else 
+      {
+        for(int i=0;i<delta;i++)
+        {
+          t2 = t2.next;
+        }
+      }
+      while(t1!=t2)
+      {
+        t1 = t1.next;
+        t2 = t2.next;
+      }
+      return t1.data;
     }
+    public static int addlistH(Node one,int pv1,Node two,int pv2,LinkedList res)
+    {
+      if(one==null && two==null)
+      {
+        return 0;
+      }
+      int data = 0;
+      if(pv1>pv2)
+      {
+       int oc = addlistH(one.next,pv1-1,two,pv2,res);
+       data = one.data+oc;
+      }
+      else if(pv1<pv2)
+      {
+       int oc = addlistH(one,pv1,two.next,pv2-1,res);
+       data = two.data+oc;
+      }
+      else 
+      {
+       int oc = addlistH(one.next,pv1-1,two.next,pv2-1,res);
+       data = one.data+two.data+oc;
+      }
+      int nv = data%10;
+      int nc = data/10;
+      res.addFirst(nv);
+      return nc;
+    }
+    public static LinkedList addlist(LinkedList one,LinkedList two)
+    {
+       LinkedList res = new LinkedList();
+       int oc = addlistH(one.head,one.size,two.head,two.size,res);
+       if(oc>0)
+       {
+         res.addFirst(oc);
+       }
+       return res;
+    }
+    private void foldH(Node right,int floor)
+    {
+      if(right==null)
+      {
+        return;
+      }
+      foldH(right.next,floor+1);
+      if(floor>size/2)
+      {
+        Node temp = fleft.next;
+        fleft.next = right;
+        right.next = temp;
+        fleft = temp;
+      }
+      else if(floor==size/2)
+      {
+        tail = right;
+        tail.next = null;
+      }
+    }
+    Node fleft;
+    public void fold()
+    {
+      fleft = head;
+      foldH(head,0);
+    }
+    private boolean ispalindromeH(Node right)
+    {
+      if(right==null)
+      {
+        return true;
+      }
+      boolean rres = ispalindromeH(right.next);
+      if(rres==false)
+      {
+        return false;
+      }
+      else if(pleft.data!=right.data)
+      {
+        return false;
+      }
+      else 
+      {
+        pleft = pleft.next;
+        return true;
+      }
+    }
+    Node pleft;
+    public boolean ispalindrome()
+    {
+      pleft = head;
+      return ispalindromeH(head);
+    }
+    private void DRH(Node right ,int floor)
+    {
+      if(right==null)
+      {
+        return;
+      }
+      DRH(right.next,floor+1);
+      if(floor>=size/2)
+      {
+        int temp = left.data;
+        left.data = right.data;
+        right.data = temp;
+        left = left.next;
+      }
+    }
+    Node left;
+    public void DataRecursive()
+    {
+      left = head;
+      DRH(head,0);
+    }
+    private void reversePRHelper(Node node)
+    {
+      if(node==null)
+      {
+        return;
+      }
+      reversePRHelper(node.next);
+      if(node==tail)
+      {
+
+      }
+      else 
+      {
+        node.next.next = node;
+      }
+    }
+    public void reversePR()
+    {
+       reversePRHelper(head);
+       head.next = null;
+       Node temp = head;
+       head = tail;
+       tail = temp;
+    }
+    private void displayReverseH(Node node)
+    {
+      if(node==null)
+      {
+        return;
+      }
+        displayReverseH(node.next);
+        System.out.print(node.data+" ");
+    }
+    public void displayReverse()
+    {
+      displayReverseH(head);
+      System.out.println();
+    }
+
+    public void kreverse(int k)
+    {
+      LinkedList prev = null;
+      while(this.size>0)
+      {
+        LinkedList curr = new LinkedList();
+       if(this.size>=k)
+      {
+        for(int i=0;i<k;i++)
+        {
+          int val = this.getFirst();
+          this.removeFirst();
+          curr.addFirst(val);
+        }
+      }
+      else
+      {
+        int s = this.size;
+        for(int i=0;i<s;i++)
+        {
+          int val = this.getFirst();
+          this.removeFirst();
+          curr.addLast(val);
+        }
+      }
+      if(prev==null)
+      {
+        prev = curr;
+      }
+      else 
+      {
+        prev.tail.next = curr.head;
+        prev.tail = curr.tail;
+        prev.size +=curr.size;
+      }
+    }
+      this.head = prev.head;
+      this.tail = prev.tail;
+      this.size = prev.size;
+    }
+    public void oddEven()
+    {
+      LinkedList odd = new LinkedList();
+      LinkedList even = new LinkedList();
+      while(this.size>0)
+      {
+        int val = this.getFirst();
+        this.removeFirst();
+        if(val%2==0)
+        {
+          even.addLast(val);
+        }
+        else 
+        {
+          odd.addLast(val);
+        }
+      }
+      if(odd.size>0 && even.size>0)
+      {
+        odd.tail.next = even.head;
+        this.head = odd.head;
+        this.tail = even.tail;
+        this.size = odd.size+even.size;
+      }
+      else if(odd.size>0)
+      {
+      this.head = odd.head;
+      this.tail = odd.tail;
+      this.size = odd.size;
+      }
+      else if(even.size>0)
+      {
+        this.head = even.head;
+        this.tail = even.tail;
+        this.size = even.size;
+      }
+    }
+    public void removeDuplicate()
+    {
+      LinkedList res = new LinkedList();
+      while(this.size()>0)
+      {
+        int val = this.getFirst();
+        this.removeFirst();
+        if(res.size()==0 || res.tail.data!=val)
+        {
+          res.addLast(val);
+        }
+      }
+      this.head = res.head;
+      this.tail = res.tail;
+      this.size = res.size;
+    }
+    public static Node midnode(Node head,Node tail)
+    {
+      Node s = head;
+      Node f = head;
+        while(f!=tail && f.next!=tail)
+        {
+          f = f.next.next;
+          s = s.next;
+        }
+        return s;
+    }
+    public static LinkedList mergesort(Node head,Node tail)
+    {
+      if(head==tail)
+      {
+        LinkedList br = new LinkedList();
+        br.addLast(head.data);
+        return br;
+      }
+      Node mid = midnode(head,tail);
+      LinkedList fsh = mergesort(head,mid);
+      LinkedList ssh = mergesort(mid.next,tail);
+      LinkedList cl  = mergeTsort(fsh,ssh);
+      return cl;
+    }
+    public static LinkedList mergeTsort(LinkedList l1,LinkedList l2)
+    {
+      Node one = l1.head;
+      Node two = l2.head;
+      LinkedList res = new LinkedList();
+      while(one!=null && two!=null)
+      {
+        if(one.data<two.data)
+        {
+           res.addLast(one.data);
+           one = one.next;
+        }
+        else 
+        {
+          res.addLast(two.data);
+          two = two.next;
+        }
+      }
+      while(one!=null)
+      {
+        res.addLast(one.data);
+        one = one.next;
+      }
+      while(two!=null)
+      {
+        res.addLast(two.data);
+        two = two.next;
+      }
+      return res;
+    }
+    int mid()
+    {
+      Node s = head;
+      Node f = head;
+      while(f.next!=null && f.next.next!=null)
+      {
+        s = s.next;
+        f = f.next.next;
+      }
+      return s.data;
+    }
+    int KthNodeFLast(int k)
+    {
+       Node s = head;
+       Node f = head;
+       for(int i=0;i<k;i++)
+       {
+         f = f.next;
+       }
+       while(f!=tail)
+       {
+         s = s.next;
+         f = f.next;
+       }
+       return s.data;
+    }
+    public void reversePI()
+    {
+      Node prev = null;
+      Node curr = head;
+      while(curr!=null)
+      {
+        Node next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+      }
+      Node temp = head;
+      head = tail;
+      tail = temp;
+    }
+    private Node getNodeAt(int idx)
+    {
+      Node temp = head;
+      for(int i=0;i<idx;i++)
+      {
+        temp = temp.next;
+      }
+      return temp;
+    }
+    public void reverseDI()
+    {
+      int li = 0;
+      int ri = size-1;
+      while(li<ri)
+      {
+        Node left = getNodeAt(li);
+        Node right = getNodeAt(ri);
+        int temp = left.data;
+        left.data = right.data;
+        right.data = temp;
+        li++;
+        ri--;
+      }
+    }
+    void removeAt(int idx)
+    {
+      if(size==0)
+      {
+        System.out.println("List is Empty");
+      }
+      else if(idx<0||idx>=size)
+      {
+        System.out.println("Invalid Arguments");
+      }
+      else if(idx==0)
+      {
+         removeFirst();
+      }
+      else if(idx==size-1)
+      {
+         removeLast();
+      }
+      else 
+      {
+        Node temp = head;
+        for(int i=0;i<idx;i++)
+        {
+          temp = temp.next;
+        }
+        temp.next = temp.next.next;
+        size--;
+      }
+    }
+    void removeLast()
+    {
+      if(size==0)
+      {
+        System.out.println("List is Empty");
+      }
+      else if(size==1)
+      {
+        head = tail = null;
+        size=0;
+      }
+      else 
+      {
+        Node temp = head;
+        for(int i=0;i<size-2;i++)
+        {
+          temp = temp.next;
+        }
+        temp.next = null;
+        tail = temp;
+        size--;
+      }
+    }
+    void addAt(int val, int idx)
+    {
+      if(idx<0||idx>=size)
+      {
+        System.out.println("Invalid Arguments");
+      }
+      else 
+      {
+        Node node = new Node();
+        node.data = val;
+
+        Node temp = head;
+        for(int i=0;i<idx-1;i++)
+        {
+          temp = temp.next;
+        }
+        node.next = temp.next;
+        temp.next = node;
+        size++;
+      }
+    }
+    void addFirst(int val)
+    {
+      Node temp = new Node();
+      temp.data = val;
+      temp.next = head;
+      head = temp;
+      if(size==0)
+      {
+        tail = temp;
+      }
+      size++;
+    }
+    int getFirst()
+    {
+      if(size==0)
+      {
+        System.out.println("List is Empty");
+        return -1;
+      }
+      else 
+      {
+        return head.data;
+      }
+    }
+    int getLast()
+    {
+     if(size==0)
+     {
+       System.out.println("List is Empty");
+       return -1;
+     }
+     else 
+     {
+       return tail.data;
+     }
+    }
+    int getAt(int idx)
+    {
+      if(size==0)
+      {
+       System.out.println("List is Empty");
+       return -1;
+      }
+      else if(idx<0 || idx>=size)
+      {
+        System.out.println("Invalid Argument");
+        return -1;
+      }
+      else 
+      {
+        Node temp = head;
+        for(int i=0;i<idx;i++)
+        {
+          temp = temp.next;
+        }
+        return temp.data;
+      }
+    }
+    void removeFirst()
+    {
+      if(size==0)
+      {
+        System.out.println("List is Empty");
+      }
+      else if(size==1)
+      {
+        head = tail = null;
+        size=0;
+      }
+      else 
+      {
+        head = head.next;
+        size--;
+      }
+    }
+    int size()
+    {
+      return size;
+    }
+    void display()
+    {
+      Node temp = head;
+      while(temp!=null)
+      {
+        System.out.print(temp.data+" ");
+        temp = temp.next;
+      }
+      System.out.println();
+    }
+    void addLast(int val)
+    {
+      Node temp = new Node();
+      temp.data = val;
+      temp.next = null;
+      if(size==0)
+      {
+        head = tail = temp;
+      }
+      else 
+      {
+        tail.next = temp;
+        tail = temp;
+      }
+      size++;
+    }
+  }
+  public static void main(String[] args)
+  {
+    Scanner scn = new Scanner(System.in);
+    int n1 = scn.nextInt();
+    LinkedList l1 = new LinkedList();
+    for(int i=0;i<n1;i++)
+    {
+      int v1 = scn.nextInt();
+      l1.addLast(v1);
+    }
+    int n2 = scn.nextInt();
+    LinkedList l2 = new LinkedList();
+    for(int i=0;i<n2;i++)
+    {
+      int v2 = scn.nextInt();
+      l2.addLast(v2);
+    }
+    int inter = LinkedList.findIntersection(l1,l2);
+    System.out.println(inter);
+    // LinkedList sum = LinkedList.addlist(l1,l2);
+    // l1.display();
+    // l2.display();
+    // sum.display();
+   // l1.fold();
+
+    // boolean rres = l1.ispalindrome();
+    // System.out.println(rres);
+    //l1.DataRecursive();
+    // l1.display();
+
+    // l1.removeDuplicate();
+    // l1.display();
+    // LinkedList sort = LinkedList.mergesort(l1.head,l1.tail);
+    // sort.display();
+   // LinkedList merge = LinkedList.mergeTsort(l1,l2);
+  //  merge.display();
+  //  l1.display();
+  //  l2.display();
+    //int idx = scn.nextInt();
+    // list.addLast(10);
+    // list.addLast(20);
+    // list.addLast(30);
+    // list.addLast(40);
+    // list.addLast(50);
+    //list.reverseDI();
+    //list.reversePI();
+   // list.display();
+    //System.out.println(list.mid());
+    // int k = scn.nextInt();
+    // System.out.println(list.KthNodeFLast(k));
+   // System.out.println(list.size());
+  //   list.removeFirst();
+  //   list.display();
+  //   System.out.println(list.size());
+  //   System.out.println(list.getFirst());
+  //   System.out.println(list.getLast());
+  // //  System.out.println(list.getAt(idx));
+  //   list.addFirst(200);
+  //   list.addAt(28,2);
+  //   list.removeLast();
+  //   list.removeAt(2);
+  //   list.display();
+  //   System.out.println(list.size());
+  }
 }
