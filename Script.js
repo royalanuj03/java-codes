@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node // shebang line to link globally
 let fs = require("fs"); 
 let cmd = process.argv.slice(2);
 (function ()
